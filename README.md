@@ -12,7 +12,7 @@ Run the "FOVExample.py" file. Note the units for all class and function paramete
 - "diameter:" inches
 - "wavelgenth:" nanometers
 - "objDistance:" kilometers
-- object size is assumed to be in meters
+- object size is in meters
 
 1. Define a camera using "Camera" class with parameters:
   - camera name
