@@ -18,13 +18,13 @@ import numpy as np
 class Camera():
 	def __init__(self, name, pixSize, sensorSize):
 		self.name = name
-		self.pixSize = pixSize				# microns
+		self.pixSize = pixSize			# microns
 		self.sensorSize = sensorSize		# [x, y] pixels
 
 class Telescope():
 	def __init__(self, name, diameter, fratio, barlowMagnification=1):
 		self.name = name
-		self.diameter = diameter*2.54*10								# inch to mm
+		self.diameter = diameter*2.54*10				# inch to mm
 		self.fratio = fratio				
 		self.flength = self.fratio*self.diameter*barlowMagnification	# mm
 
@@ -33,7 +33,7 @@ class Telesystem():
 		self.Camera = Camera
 		self.Telescope = Telescope
 		self.name = [Camera.name, Telescope.name]
-		self.resolution = np.arctan(self.Camera.pixSize*10**(-3)/self.Telescope.flength)*3600*180/np.pi 	# arcseconds 
+		self.resolution = np.arctan(self.Camera.pixSize*10**(-3)/self.Telescope.flength)*3600*180/np.pi # arcseconds 
 		self.fov = [self.resolution*self.Camera.sensorSize[0], 
 									self.resolution*self.Camera.sensorSize[1]] # arcseconds
 
@@ -42,12 +42,13 @@ class ObservationInfo():
 		self.objName = obj[0]
 		self.objDistance = objDistance		# km
 		self.objSize = [obj[1], obj[2]]		# [height, width] m
-		self.wavelength = 550				# nm
+		self.wavelength = 550			# nm
 		self.Telesystem = Telesystem
-		self.diffractionLimit = 1.22*180*3600*self.wavelength*10**(-9)/(self.Telesystem.Telescope.diameter*np.pi/1000)	# arcseconds
+		self.diffractionLimit = 1.22*180*3600*self.wavelength*10**(-9) / 
+				(self.Telesystem.Telescope.diameter*np.pi/1000)					# arcseconds
 		self.resolution = self.Telesystem.resolution*np.pi/(180*3600)
-		self.objResolution = np.tan(self.resolution)*(self.objDistance*1000)							# m
-		self.objSizePix = [self.objSize[0]/self.objResolution, self.objSize[1]/self.objResolution]		# pixels
+		self.objResolution = np.tan(self.resolution)*(self.objDistance*1000)				# m
+		self.objSizePix = [self.objSize[0]/self.objResolution, self.objSize[1]/self.objResolution]	# pixels
 
 #%% Functions
 def printResults(obsInfo):
@@ -61,6 +62,6 @@ def printResults(obsInfo):
 	print('Object has height %d pixels and width %d pixels.' % (obsInfo.objSizePix[0], obsInfo.objSizePix[1]))
 
 def requiredDistance(obsInfo): 
-	requiredRes = obsInfo.objSize[0]/obsInfo.Telesystem.Camera.sensorSize[0]					# m
+	requiredRes = obsInfo.objSize[0]/obsInfo.Telesystem.Camera.sensorSize[0]			# m
 	requiredDist = requiredRes/(np.tan(obsInfo.Telesystem.resolution*np.pi/(180*3600))*1000)	# km
 	print('Required distance for '+obsInfo.objName+' to fill image is %.1fkm.' % requiredDist)
